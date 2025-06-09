@@ -4,44 +4,8 @@ body {
     background-color: #f9f9f9;
     margin: 0;
     padding: 0;
-}
-
-#classroom-select {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    background: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
-}
-
-#classroom-select h2 {
-    font-size: 24px;
-    margin-bottom: 1rem;
-}
-
-#classroom-select select,
-#classroom-select button {
-    padding: 10px 20px;
-    font-size: 18px;
-    margin: 5px;
-    border-radius: 8px;
-    border: 1px solid #ccc;
-}
-
-#classroom-select button {
-    font-family: "Mitr", sans-serif;
-    background-color: #3498db;
-    color: white;
-    cursor: pointer;
-}
-
-#classroom-select button:hover {
-    background-color: #2980b9;
-}
-
-#classroom-table {
-    font-family: "Mitr", sans-serif;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
 }
 
 #emoji {
@@ -49,7 +13,9 @@ body {
     cursor: pointer;
     transition: transform 0.1s;
     user-select: none;
+    -webkit-user-select: none;
     -webkit-user-drag: none;
+    -webkit-tap-highlight-color: transparent;
 }
 
 #emoji:active {
@@ -60,13 +26,24 @@ body {
     outline: none;
 }
 
-table {
-    margin: 20px auto;
-    border-collapse: collapse;
-}
+@media (max-width: 600px) {
+    #emoji {
+        font-size: 80px;
+    }
 
-th,
-td {
-    border: 1px solid #ccc;
-    padding: 10px;
+    #classroom-select h2 {
+        font-size: 20px;
+    }
+
+    #classroom-select select,
+    #classroom-select button {
+        font-size: 16px;
+        padding: 8px 16px;
+    }
+
+    table th,
+    table td {
+        font-size: 14px;
+        padding: 6px;
+    }
 }
