@@ -1,7 +1,7 @@
 const express = require('express');
 const path = require('path');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 const scores = {}; // { "3/1": { total: 123, users: { "192.168.1.5": 12 } } }
 
@@ -38,5 +38,5 @@ app.get('/leaderboard', (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server running at http://localhost:${port}`);
+    console.log(`Server running at ${port}`);
 });
