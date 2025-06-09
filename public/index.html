@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8">
+    <title>มหาศึกห้องชนห้อง</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Mitr:wght@200;300;400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div id="classroom-select">
+        <h2>กรุณาเลือกฝ่าย</h2>
+        <select id="classroom-table">
+            <option value="">ไม่มีฝ่าย</option>
+            <option value="DIP">DIP</option>
+            <option value="พลังสิบ">พลังสิบ</option>
+            <option value="6/7">6/7</option>
+        </select>
+        <button id="start-button">เริ่มเล่น</button>
+    </div>
+
+    <div id="game" style="display:none;">
+        <h2>ห้องเรียน: <span id="currentClassroom"></span></h2>
+        <div id="emoji">🐱</div>
+        <p>คะแนนของคุณ: <span id="userScore">0</span></p>
+        <p>คะแนนรวมของห้องคุณ: <span id="classScore">0</span></p>
+
+        <h3>อันดับห้องเรียนทั้งหมด</h3>
+        <table id="leaderboard">
+            <thead>
+                <tr>
+                    <th>ห้องเรียน</th>
+                    <th>คะแนนรวม</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
