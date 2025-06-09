@@ -22,7 +22,13 @@ async function getIP() {
 startBtn.addEventListener('click', async () => {
     classroom = classroomTable.value;
     if (!classroom) {
-        alert("กรุณาเลือกฝ่ายด้วยครับ");
+        Swal.fire({
+            icon: 'warning',
+            title: 'ห้ามเป็นกลาง',
+            text: 'เลือกตัวละครเดี๋ยวนี้เลยครับ',
+            confirmButtonColor: '#f27474',
+            confirmButtonText: 'เข้าใจแล้ว'
+        });
         return;
     }
 
