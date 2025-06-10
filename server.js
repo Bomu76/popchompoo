@@ -1,42 +1,73 @@
 const express = require('express');
 const path = require('path');
+const mongoose = require('mongoose');
+require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-const scores = {}; // { "3/1": { total: 123, users: { "192.168.1.5": 12 } } }
+const mongoUri = process.env.MONGO_URI;
+mongoose.connect(mongoUri)
+    .then(() => console.log('✅ Connected to MongoDB'))
+    .catch(err => console.error('❌ MongoDB connection error:', err));
+
+const scoreSchema = new mongoose.Schema({
+    character: String,
+    ip: String,
+    count: { type: Number, default: 0 }
+});
+
+const Score = mongoose.model('Score', scoreSchema);
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.json());
 
-app.post('/click', (req, res) => {
-    const { classroom, ip } = req.body;
-    if (!classroom || !ip) return res.status(400).send('Missing classroom or ip');
+app.post('/click', async (req, res) => {
+    const { character, ip } = req.body;
+    if (!character || !ip) return res.status(400).send('Missing character or ip');
 
-    if (!scores[classroom]) {
-        scores[classroom] = { total: 0, users: {} };
-    }
-
-    scores[classroom].total++;
-    scores[classroom].users[ip] = (scores[classroom].users[ip] || 0) + 1;
+    const result = await Score.findOneAndUpdate(
+        { character, ip },
+        { $inc: { count: 1 } },
+        { upsert: true, new: true }
+    );
 
     res.sendStatus(200);
 });
 
-app.get('/score/:classroom/:ip', (req, res) => {
-    const { classroom, ip } = req.params;
-    const classData = scores[classroom] || { total: 0, users: {} };
-    const userScore = classData.users[ip] || 0;
-    res.json({ total: classData.total, user: userScore });
+app.get('/score/:character/:ip', async (req, res) => {
+    const { character, ip } = req.params;
+
+    const userData = await Score.findOne({ character, ip });
+    const charData = await Score.aggregate([
+        { $match: { character } },
+        { $group: { _id: null, total: { $sum: '$count' } } }
+    ]);
+
+    res.json({
+        total: charData[0]?.total || 0,
+        user: userData?.count || 0
+    });
 });
 
-app.get('/leaderboard', (req, res) => {
-    const leaderboard = Object.entries(scores)
-        .map(([classroom, data]) => ({ classroom, score: data.total }))
-        .sort((a, b) => b.score - a.score);
+app.get('/leaderboard', async (req, res) => {
+    const charTotals = await Score.aggregate([
+        {
+            $group: {
+                _id: '$character',
+                score: { $sum: '$count' }
+            }
+        },
+        { $sort: { score: -1 } }
+    ]);
 
-    res.json(leaderboard);
+    res.json(
+        charTotals.map(item => ({
+            character: item._id,
+            score: item.score
+        }))
+    );
 });
 
 app.listen(port, () => {
-    console.log(`Server running at ${port}`);
+    console.log(`Server running at https://localhost:${port}`);
 });

@@ -1,17 +1,17 @@
 const startBtn = document.getElementById('start-button');
-const classroomTable = document.getElementById('classroom-table');
+const charTable = document.getElementById('character-table');
 const gameDiv = document.getElementById('game');
-const classroomSelectDiv = document.getElementById('classroom-select');
-const currentClassroomEl = document.getElementById('currentClassroom');
+const charSelectDiv = document.getElementById('character-select');
+const currentCharEl = document.getElementById('currentCharacter');
 const emoji = document.getElementById('emoji');
 const userScoreEl = document.getElementById('userScore');
-const classScoreEl = document.getElementById('classScore');
+const charScoreEl = document.getElementById('charScore');
 const leaderboardBody = document.querySelector('#leaderboard tbody');
 
-let classroom = '';
+let character = '';
 let userIP = '';
 let userScore = 0;
-let classScore = 0;
+let charScore = 0;
 
 async function getIP() {
     const res = await fetch('https://api.ipify.org?format=json');
@@ -20,8 +20,8 @@ async function getIP() {
 }
 
 startBtn.addEventListener('click', async () => {
-    classroom = classroomTable.value;
-    if (!classroom) {
+    character = charTable.value;
+    if (!character) {
         Swal.fire({
             icon: 'warning',
             title: 'ห้ามเป็นกลาง',
@@ -34,13 +34,13 @@ startBtn.addEventListener('click', async () => {
 
     userIP = await getIP();
 
-    currentClassroomEl.textContent = classroom;
-    classroomSelectDiv.style.display = 'none';
+    currentCharEl.textContent = character;
+    charSelectDiv.style.display = 'none';
     gameDiv.style.display = 'block';
 });
 
 emoji.addEventListener('click', async () => {
-    if (!classroom || !userIP) return;
+    if (!character || !userIP) return;
 
     try {
         await new Audio('pop.mp3').play();
@@ -54,20 +54,20 @@ emoji.addEventListener('click', async () => {
     fetch('/click', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ classroom, ip: userIP })
+        body: JSON.stringify({ character, ip: userIP })
     });
 });
 
 setInterval(() => {
-    if (!classroom || !userIP) return;
+    if (!character || !userIP) return;
 
-    fetch(`/score/${encodeURIComponent(classroom)}/${encodeURIComponent(userIP)}`)
+    fetch(`/score/${encodeURIComponent(character)}/${encodeURIComponent(userIP)}`)
         .then(res => res.json())
         .then(data => {
             userScore = data.user;
-            classScore = data.total;
+            charScore = data.total;
             userScoreEl.textContent = userScore;
-            classScoreEl.textContent = classScore;
+            charScoreEl.textContent = charScore;
         });
 
     fetch('/leaderboard')
@@ -76,7 +76,7 @@ setInterval(() => {
             leaderboardBody.innerHTML = '';
             data.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.innerHTML = `<td>${row.classroom}</td><td>${row.score}</td>`;
+                tr.innerHTML = `<td>${row.character}</td><td>${row.score}</td>`;
                 leaderboardBody.appendChild(tr);
             });
         });
